@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votações</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .votacao-card {
+            margin: 20px;
+            width: 45%; /* Ajuste para ocupar metade da linha */
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombreamento */
+            border-radius: 10px; /* Bordas arredondadas */
+        }
+        .card-title {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+        }
+        .card-text {
+            font-size: 1rem;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            border-radius: 5px; /* Bordas arredondadas no botão */
+            padding: 10px 20px; /* Espaçamento interno do botão */
+            color: white;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease; /* Transição suave ao passar o mouse */
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .votacao-card {
+            /* Seu CSS existente para votacao-card... */
+            transition: box-shadow 0.3s ease, transform 0.3s ease; /* Transição suave para sombra e transformação */
+        }
+    
+        .votacao-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Aumenta a sombra ao passar o mouse */
+            transform: scale(1.03); /* Transformação sutil para dar um efeito de 'levantar' */
+        }
+        .navbar {
+            background-color: #333333; /* Cinza bem escuro para a barra de navegação */
+            border-bottom: 2px solid #474747; /* Borda de preto claro na parte inferior */
+        }
+    
+        .navbar-brand, .navbar-nav .nav-link {
+            color: white; /* Cor branca para os textos na barra de navegação */
+        }
+    
+        .navbar-brand:hover, .navbar-nav .nav-link:hover {
+            color: #dddddd; /* Cor mais clara para o texto ao passar o mouse */
+        }
+        .inner-card-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .inner-card {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>    
+</head>
+<body>
+    <!-- Barra de Navegação -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Sistema de Votação</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(atual)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container">
+        <h1 class="text-center mt-5">Lista de Votações</h1>
+        <div class="card-container">
+            <% for(let id in votacoes) { %>
+                <div class="card votacao-card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= votacoes[id].titulo %></h5>
+                        <div class="inner-card-container">
+                            <% votacoes[id].categorias.forEach((categoria, index) => { %>
+                                <div class="card inner-card mb-2">
+                                    <div class="card-body">
+                                        <p class="card-text">Votos <%= categoria %>: <%= votacoes[id].votos[categoria] %></p>
+                                        <button class="btn btn-primary votar-btn" data-votacaoid="<%= id %>" data-categoria="<%= categoria %>">Votar</button>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+            
+        </div>
+    </div>
+
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const botoesVotar = document.querySelectorAll('.votar-btn');
+    
+            botoesVotar.forEach(botao => {
+                botao.addEventListener('click', function() {
+                    const votacaoId = this.getAttribute('data-votacaoid');
+                    const categoria = this.getAttribute('data-categoria');
+    
+                    const voto = {
+                        transactionType: "registerVote",
+                        votacaoId: votacaoId,
+                        categoria: categoria
+                    };
+    
+                    enviarVoto(voto);
+                });
+            });
+        });
+    
+        function enviarVoto(voto) {
+            fetch('http://localhost:8000/createVoto', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(voto)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Falha ao enviar voto');
+            })
+            .then(data => {
+                console.log('Voto registrado:', data);
+                // Atualizar a página
+                window.location.reload();
+            })
+            .catch(error => console.error('Erro:', error));
+        }
+    </script>
+</body>
+</html>

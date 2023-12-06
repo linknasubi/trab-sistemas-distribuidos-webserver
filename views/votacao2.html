@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Votação</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Azul bem leve no fundo */
+        }
+        .categoria {
+            cursor: pointer;
+            padding: 20px;
+            margin: 10px auto; /* Centralizar e adicionar margem */
+            border: 2px solid #333333; /* Linha cinza escura */
+            border-radius: 25px;
+            text-align: center;
+            background-color: #e7f0fd; /* Fundo branco para os componentes */
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .categoria:hover {
+            background-color: #90ee90;
+            color: white;
+        }
+        .voto-texto {
+            margin-bottom: 0;
+        }
+        .votos {
+            text-align: center;
+        }
+        .navbar {
+            background-color: #161616; /* Cinza bem escuro para a barra de navegação */
+            border-bottom: 2px solid #474747; /* Borda de preto claro na parte inferior */
+        }
+    
+        .navbar-brand, .navbar-nav .nav-link {
+            color: white; /* Cor branca para os textos na barra de navegação */
+        }
+    
+        .navbar-brand:hover, .navbar-nav .nav-link:hover {
+            color: #dddddd; /* Cor mais clara para o texto ao passar o mouse */
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra de Navegação e Conteúdo Principal -->
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Sistema de Votação</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(atual)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1>Presidente da Associação de Moradores</h1>
+        <p>Vote no próximo presidente da associação.</p>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6 categoria" onclick="votar('A')">
+                <h3>Categoria A</h3>
+                <p class="voto-texto">Candidato João</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6 votos">
+                <p>Votos: <span id="votos-categoria-a">200</span></p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6 categoria" onclick="votar('B')">
+                <h3>Categoria B</h3>
+                <p class="voto-texto">Candidata Maria</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6 votos">
+                <p>Votos: <span id="votos-categoria-b">180</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts e função votar -->
+</body>
+</html>
